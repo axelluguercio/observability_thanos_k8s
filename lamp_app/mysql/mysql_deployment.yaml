@@ -1,0 +1,69 @@
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: mysql-db
+spec:
+  selector:
+    matchLabels:
+      app: mysql-ct
+  template:
+    metadata:
+      labels:
+        app: mysql-ct
+    spec:
+      containers:
+      - image: aluguercio/goodluck_repo:mysql8-start_schema
+        name: mysql-db
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: "/var/lib/mysql"
+          subPath: "mysql"
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-db-creds
+              key: ROOT_PASSWORD
+        - name: MYSQL_ROOT_HOST
+          value: "%"
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-db-creds
+type: Opaque
+data:
+  ROOT_PASSWORD: Z29lbHZpcwo=
+  MYSQL_HOST: bXlzcWwtc2VydmljZQo=
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+  labels:
+    app: mysql-ct
+  namespace: prod
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+spec:
+  selector:
+    app: mysql-ct
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
