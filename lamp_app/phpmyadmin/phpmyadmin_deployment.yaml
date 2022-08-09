@@ -48,4 +48,4 @@ metadata:
   name: phpmyadmin-secret
 type: Opaque
 data:
-  root-password: Z29lbHZpcwo=
+  root-password: Z29lbHZpcw== 

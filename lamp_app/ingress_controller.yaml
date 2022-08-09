@@ -21,25 +21,11 @@ spec:
               service: 
                 name: lamp-service
                 port: 
-                  number: 80
+                  number: 8081
           - path: "/api" # Redirecciona a la api
             pathType: Prefix
             backend:
               service: 
                 name: lamp-service
                 port: 
-                  number: 80
-          - path: "/prometheus" # Redirecciona a prometheus
-            pathType: Prefix
-            backend:
-              service: 
-                name: prometheus-k8s
-                port: 
-                  number: 9090
-          - path: "/grafana" # Redirecciona a grafana
-            pathType: Prefix
-            backend:
-              service: 
-                name: grafana
-                port: 
-                  number: 3000
+                  number: 8081

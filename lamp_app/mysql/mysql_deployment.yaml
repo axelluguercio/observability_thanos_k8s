@@ -25,7 +25,12 @@ spec:
           valueFrom:
             secretKeyRef:
               name: mysql-db-creds
-              key: ROOT_PASSWORD
+              key: mysql-root-password 
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysql-db-creds
+              key: mysql-user
         - name: MYSQL_ROOT_HOST
           value: "%"
       volumes:
@@ -36,11 +41,12 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: mysql-db-creds
+   name: mysql-db-creds
 type: Opaque
 data:
-  ROOT_PASSWORD: Z29lbHZpcwo=
-  MYSQL_HOST: bXlzcWwtc2VydmljZQo=
+  mysql-password: Z29lbHZpcw== 
+  mysql-root-password: Z29lbHZpcw== 
+  mysql-user: cm9vdAo=
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -48,7 +54,6 @@ metadata:
   name: mysql-pv-claim
   labels:
     app: mysql-ct
-  namespace: prod
 spec:
   accessModes:
     - ReadWriteOnce

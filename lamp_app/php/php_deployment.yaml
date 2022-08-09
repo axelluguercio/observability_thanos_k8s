@@ -52,5 +52,5 @@ spec:
   selector:
     app: lamp-wp
   ports:
-    - port: 80
+    - port: 8081
       targetPort: 80
